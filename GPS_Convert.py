@@ -4,7 +4,7 @@ import _strptime
 from datetime import datetime
 
 INPUT_FILENAME = "D://stockholm_walk.nmea"
-OUTPUT_FILENAME = 'out.csv'
+OUTPUT_FILENAME = 'out_.stockholm_walk.nmea.csv'
 
 # open the input file in read mode
 with open(INPUT_FILENAME, 'r') as input_file:
