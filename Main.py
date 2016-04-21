@@ -1,11 +1,11 @@
 import os
-import create_table as m
-import nmea__csv as csv
-import nmea__kml as kml
+import Create_Table as r
+import Parser_Csv as csv
+import Parser_Kml as kml
 
-i=m.read_dir("C:\\Users\\Dror\\Desktop\\Benchmark - Copy")
+i=r.read_dir("C:\\Users\\Dror\\Desktop\\Benchmark - Copy")
 print (i)
-for x in range (1,i+1):
-    csv.create_csv(x)
-    kml.create_kml(x)
+for n in range (1,i+1):
+    csv.create_csv(n)
+    kml.create_kml(n)
     
