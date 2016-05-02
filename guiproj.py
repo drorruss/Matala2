@@ -1,295 +1,376 @@
-from tkinter import *
-import os.path
-import sqlite3
-import csv
-from datetime import datetime
-import math
-import os
-import time
+# -*- coding: utf-8 -*-
+
+# Form implementation generated from reading ui file 'ido2.ui'
+#
+# Created by: PyQt4 UI code generator 4.11.4
+#
+# WARNING! All changes made in this file will be lost!
+from PyQt4 import QtCore, QtGui
+import sys
+import M1 as m
+import nmea_to_csv as c
+import nema_to_kml_3 as kml
+import datetime
+from PyQt4.QtGui import QFileDialog
+
+try:
+    _fromUtf8 = QtCore.QString.fromUtf8
+except AttributeError:
+    def _fromUtf8(s):
+        return s
+
+try:
+    _encoding = QtGui.QApplication.UnicodeUTF8
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig, _encoding)
+except AttributeError:
+    def _translate(context, text, disambig):
+        return QtGui.QApplication.translate(context, text, disambig)
+
+class Ui_NMEA(QtGui.QWidget):
+    def __init__(self):
+        QtGui.QWidget.__init__(self)
+        self.setupUi(self)
+    def setupUi(self, NMEA):
+        NMEA.setObjectName(_fromUtf8("NMEA"))
+        NMEA.resize(866, 566)
+        self.label = QtGui.QLabel(NMEA)
+        self.label.setGeometry(QtCore.QRect(230, 0, 421, 61))
+        font = QtGui.QFont()
+        font.setPointSize(28)
+        self.label.setFont(font)
+        self.label.setObjectName(_fromUtf8("label"))
+        self.openFile = QtGui.QPushButton(NMEA)
+        self.openFile.setGeometry(QtCore.QRect(20, 110, 93, 28))
+        self.openFile.setObjectName(_fromUtf8("openFile"))
+        self.label_2 = QtGui.QLabel(NMEA)
+        self.label_2.setGeometry(QtCore.QRect(20, 76, 241, 20))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_2.setFont(font)
+        self.label_2.setObjectName(_fromUtf8("label_2"))
+        self.fileText = QtGui.QTextEdit(NMEA)
+        self.fileText.setGeometry(QtCore.QRect(260, 110, 591, 31))
+        self.fileText.setObjectName(_fromUtf8("fileText"))
+        self.label_3 = QtGui.QLabel(NMEA)
+        self.label_3.setGeometry(QtCore.QRect(30, 480, 111, 16))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_3.setFont(font)
+        self.label_3.setObjectName(_fromUtf8("label_3"))
+        self.box_kml = QtGui.QCheckBox(NMEA)
+        self.box_kml.setGeometry(QtCore.QRect(200, 480, 51, 20))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.box_kml.setFont(font)
+        self.box_kml.setChecked(True)
+        self.box_kml.setObjectName(_fromUtf8("box_kml"))
+        self.box_csv = QtGui.QCheckBox(NMEA)
+        self.box_csv.setGeometry(QtCore.QRect(260, 480, 51, 20))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.box_csv.setFont(font)
+        self.box_csv.setChecked(True)
+        self.box_csv.setObjectName(_fromUtf8("box_csv"))
+        self.label_4 = QtGui.QLabel(NMEA)
+        self.label_4.setGeometry(QtCore.QRect(20, 250, 171, 31))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName(_fromUtf8("label_4"))
+        self.box_lat = QtGui.QCheckBox(NMEA)
+        self.box_lat.setGeometry(QtCore.QRect(320, 260, 71, 20))
+        self.box_lat.setCheckable(True)
+        self.box_lat.setChecked(True)
+        self.box_lat.setObjectName(_fromUtf8("box_lat"))
+        self.box_time = QtGui.QCheckBox(NMEA)
+        self.box_time.setGeometry(QtCore.QRect(260, 260, 51, 20))
+        self.box_time.setChecked(True)
+        self.box_time.setObjectName(_fromUtf8("box_time"))
+        self.box_quality = QtGui.QCheckBox(NMEA)
+        self.box_quality.setGeometry(QtCore.QRect(720, 260, 61, 20))
+        self.box_quality.setChecked(True)
+        self.box_quality.setObjectName(_fromUtf8("box_quality"))
+        self.box_long = QtGui.QCheckBox(NMEA)
+        self.box_long.setGeometry(QtCore.QRect(400, 260, 81, 20))
+        self.box_long.setChecked(True)
+        self.box_long.setTristate(False)
+        self.box_long.setObjectName(_fromUtf8("box_long"))
+        self.box_speed = QtGui.QCheckBox(NMEA)
+        self.box_speed.setGeometry(QtCore.QRect(790, 260, 61, 20))
+        self.box_speed.setChecked(True)
+        self.box_speed.setObjectName(_fromUtf8("box_speed"))
+        self.box_nos = QtGui.QCheckBox(NMEA)
+        self.box_nos.setGeometry(QtCore.QRect(570, 260, 141, 21))
+        self.box_nos.setChecked(True)
+        self.box_nos.setObjectName(_fromUtf8("box_nos"))
+        self.box_altitude = QtGui.QCheckBox(NMEA)
+        self.box_altitude.setGeometry(QtCore.QRect(490, 260, 71, 20))
+        self.box_altitude.setChecked(True)
+        self.box_altitude.setObjectName(_fromUtf8("box_altitude"))
+        self.box_date = QtGui.QCheckBox(NMEA)
+        self.box_date.setGeometry(QtCore.QRect(200, 260, 51, 20))
+        self.box_date.setChecked(True)
+        self.box_date.setObjectName(_fromUtf8("box_date"))
+        self.label_5 = QtGui.QLabel(NMEA)
+        self.label_5.setGeometry(QtCore.QRect(20, 165, 201, 21))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_5.setFont(font)
+        self.label_5.setObjectName(_fromUtf8("label_5"))
+        self.folderText = QtGui.QTextEdit(NMEA)
+        self.folderText.setGeometry(QtCore.QRect(260, 200, 591, 31))
+        self.folderText.setObjectName(_fromUtf8("folderText"))
+        self.openOutput = QtGui.QPushButton(NMEA)
+        self.openOutput.setGeometry(QtCore.QRect(20, 200, 141, 28))
+        self.openOutput.setObjectName(_fromUtf8("openOutput"))
+        self.label_6 = QtGui.QLabel(NMEA)
+        self.label_6.setGeometry(QtCore.QRect(750, 530, 101, 31))
+        font = QtGui.QFont()
+        font.setPointSize(8)
+        self.label_6.setFont(font)
+        self.label_6.setObjectName(_fromUtf8("label_6"))
+        self.pushButton_3 = QtGui.QPushButton(NMEA)
+        self.pushButton_3.setGeometry(QtCore.QRect(750, 500, 101, 31))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        font.setBold(True)
+        font.setWeight(75)
+        self.pushButton_3.setFont(font)
+        self.pushButton_3.setObjectName(_fromUtf8("pushButton_3"))
+        self.openFolder = QtGui.QPushButton(NMEA)
+        self.openFolder.setGeometry(QtCore.QRect(150, 110, 93, 28))
+        self.openFolder.setObjectName(_fromUtf8("openFolder"))
+        self.label_8 = QtGui.QLabel(NMEA)
+        self.label_8.setGeometry(QtCore.QRect(120, 120, 21, 16))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_8.setFont(font)
+        self.label_8.setObjectName(_fromUtf8("label_8"))
+        self.label_9 = QtGui.QLabel(NMEA)
+        self.label_9.setGeometry(QtCore.QRect(570, 310, 16, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_9.setFont(font)
+        self.label_9.setObjectName(_fromUtf8("label_9"))
+        self.label_11 = QtGui.QLabel(NMEA)
+        self.label_11.setGeometry(QtCore.QRect(20, 310, 181, 31))
+        font = QtGui.QFont()
+        font.setPointSize(12)
+        self.label_11.setFont(font)
+        self.label_11.setObjectName(_fromUtf8("label_11"))
+        self.label_12 = QtGui.QLabel(NMEA)
+        self.label_12.setGeometry(QtCore.QRect(200, 310, 121, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_12.setFont(font)
+        self.label_12.setObjectName(_fromUtf8("label_12"))
+        self.dateStart = QtGui.QDateTimeEdit(NMEA)
+        self.dateStart.setGeometry(QtCore.QRect(410, 320, 151, 22))
+        self.dateStart.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.dateStart.setObjectName(_fromUtf8("dateStart"))
+        self.dateEnd = QtGui.QDateTimeEdit(NMEA)
+        self.dateEnd.setGeometry(QtCore.QRect(590, 320, 151, 22))
+        self.dateEnd.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.dateEnd.setDateTime(QtCore.QDateTime(QtCore.QDate(2017, 1, 1), QtCore.QTime(0, 0, 0)))
+        self.dateEnd.setObjectName(_fromUtf8("dateEnd"))
+        self.altStart = QtGui.QSpinBox(NMEA)
+        self.altStart.setGeometry(QtCore.QRect(410, 360, 61, 22))
+        self.altStart.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.altStart.setMaximum(10000)
+        self.altStart.setObjectName(_fromUtf8("altStart"))
+        self.altEnd = QtGui.QSpinBox(NMEA)
+        self.altEnd.setGeometry(QtCore.QRect(500, 360, 61, 22))
+        self.altEnd.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.altEnd.setMaximum(99999)
+        self.altEnd.setProperty("value", 99999)
+        self.altEnd.setObjectName(_fromUtf8("altEnd"))
+        self.label_13 = QtGui.QLabel(NMEA)
+        self.label_13.setGeometry(QtCore.QRect(200, 350, 161, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_13.setFont(font)
+        self.label_13.setObjectName(_fromUtf8("label_13"))
+        self.label_10 = QtGui.QLabel(NMEA)
+        self.label_10.setGeometry(QtCore.QRect(480, 350, 16, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_10.setFont(font)
+        self.label_10.setObjectName(_fromUtf8("label_10"))
+        self.label_14 = QtGui.QLabel(NMEA)
+        self.label_14.setGeometry(QtCore.QRect(200, 430, 201, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_14.setFont(font)
+        self.label_14.setObjectName(_fromUtf8("label_14"))
+        self.nosStart = QtGui.QSpinBox(NMEA)
+        self.nosStart.setGeometry(QtCore.QRect(410, 440, 41, 22))
+        self.nosStart.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.nosStart.setMaximum(8)
+        self.nosStart.setObjectName(_fromUtf8("nosStart"))
+        self.label_15 = QtGui.QLabel(NMEA)
+        self.label_15.setGeometry(QtCore.QRect(470, 430, 16, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_15.setFont(font)
+        self.label_15.setObjectName(_fromUtf8("label_15"))
+        self.nosEnd = QtGui.QSpinBox(NMEA)
+        self.nosEnd.setGeometry(QtCore.QRect(500, 440, 41, 22))
+        self.nosEnd.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.nosEnd.setMaximum(8)
+        self.nosEnd.setProperty("value", 8)
+        self.nosEnd.setObjectName(_fromUtf8("nosEnd"))
+        self.label_16 = QtGui.QLabel(NMEA)
+        self.label_16.setGeometry(QtCore.QRect(200, 390, 161, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_16.setFont(font)
+        self.label_16.setObjectName(_fromUtf8("label_16"))
+        self.speedStart = QtGui.QSpinBox(NMEA)
+        self.speedStart.setGeometry(QtCore.QRect(410, 400, 61, 22))
+        self.speedStart.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.speedStart.setMaximum(10000)
+        self.speedStart.setObjectName(_fromUtf8("speedStart"))
+        self.label_18 = QtGui.QLabel(NMEA)
+        self.label_18.setGeometry(QtCore.QRect(480, 390, 16, 31))
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label_18.setFont(font)
+        self.label_18.setObjectName(_fromUtf8("label_18"))
+        self.speedEnd = QtGui.QSpinBox(NMEA)
+        self.speedEnd.setGeometry(QtCore.QRect(500, 400, 61, 22))
+        self.speedEnd.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.speedEnd.setMaximum(10000)
+        self.speedEnd.setProperty("value", 10000)
+        self.speedEnd.setObjectName(_fromUtf8("speedEnd"))
+
+        self.retranslateUi(NMEA)
+        QtCore.QMetaObject.connectSlotsByName(NMEA)
+
+    def retranslateUi(self, NMEA):
+        NMEA.setWindowTitle(_translate("NMEA", "NMEA TO KML/CSV", None))
+        self.label.setText(_translate("NMEA", "NMEA TO KML/CSV", None))
+        self.openFile.setText(_translate("NMEA", "Select File", None))
+        self.label_2.setText(_translate("NMEA", "Select Input Folder or File:", None))
+        self.label_3.setText(_translate("NMEA", "Convert to:", None))
+        self.box_kml.setText(_translate("NMEA", "KML ", None))
+        self.box_csv.setText(_translate("NMEA", "CSV", None))
+        self.label_4.setText(_translate("NMEA", "Values to display:", None))
+        self.box_lat.setText(_translate("NMEA", "Latitude", None))
+        self.box_time.setText(_translate("NMEA", "Time", None))
+        self.box_quality.setText(_translate("NMEA", "Quality", None))
+        self.box_long.setText(_translate("NMEA", "Longtitude", None))
+        self.box_speed.setText(_translate("NMEA", "Speed", None))
+        self.box_nos.setText(_translate("NMEA", "Number of Satellites", None))
+        self.box_altitude.setText(_translate("NMEA", "Altitude", None))
+        self.box_date.setText(_translate("NMEA", "Date", None))
+        self.label_5.setText(_translate("NMEA", "Select Output Folder:", None))
+        self.openOutput.setText(_translate("NMEA", "Select Output Folder", None))
+        self.label_6.setText(_translate("NMEA", "Created By R.I.O", None))
+        self.pushButton_3.setText(_translate("NMEA", "Convert", None))
+        self.openFolder.setText(_translate("NMEA", "Select Folder", None))
+        self.label_8.setText(_translate("NMEA", "or", None))
+        self.label_9.setText(_translate("NMEA", "_", None))
+        self.label_11.setText(_translate("NMEA", "Filter by:", None))
+        self.label_12.setText(_translate("NMEA", "Date and time:", None))
+        self.dateStart.setDisplayFormat(_translate("NMEA", "HH:mm:ss dd/MM/yyyy", None))
+        self.dateEnd.setDisplayFormat(_translate("NMEA", "HH:mm:ss dd/MM/yyyy", None))
+        self.label_13.setText(_translate("NMEA", "Altitude (0-99999 m):", None))
+        self.label_10.setText(_translate("NMEA", "_", None))
+        self.label_14.setText(_translate("NMEA", "Number of Satellites (0-8):", None))
+        self.label_15.setText(_translate("NMEA", "_", None))
+        self.label_16.setText(_translate("NMEA", "Speed (km/h):", None))
+        self.label_18.setText(_translate("NMEA", "_", None))
+        self.pushButton_3.clicked.connect(self.convert)
+        self.openFolder.clicked.connect(self.openFolderDialog)
+        self.openOutput.clicked.connect(self.selectOutputFolder)
+        self.openFile.clicked.connect(self.openFileDialog)
+        self.folderText.setText('C:\\')
+        self.fileText.setText('C:\\')
+    def printd(self):
+        print("ido")
+
+    def openFileDialog(self):
+        filter = "Nmea(*.nmea)"
+        filename = QtGui.QFileDialog.getOpenFileNameAndFilter(self,"Open File", "C:\\nmea",filter)
+        self.fileText.setText(filename[0])
+
+    def openFolderDialog(self):
+        foldername = QtGui.QFileDialog.getExistingDirectory(self, 'Select a folder:', 'C:\\', QtGui.QFileDialog.ShowDirsOnly)
+        self.fileText.setText(foldername)
+    def selectOutputFolder(self):
+        foldername = QtGui.QFileDialog.getExistingDirectory(self, 'Select a folder:', 'C:\\', QtGui.QFileDialog.ShowDirsOnly)
+        self.folderText.setText(foldername)
+
+    def checkValues(self):
+        arr=[0,0,0,0,0,0,0,0,0,0,0]
+
+        if (self.box_time.isChecked()):
+            arr[0] = 1
+        if (self.box_date.isChecked()):
+            arr[10] = 1
+        if (self.box_lat.isChecked()):
+            arr[1] = 1
+        if (self.box_long.isChecked()):
+            arr[3] = 1
+        if (self.box_altitude.isChecked()):
+            arr[8] = 1
+        if (self.box_speed.isChecked()):
+            arr[9] = 1
+        if (self.box_quality.isChecked()):
+            arr[5] = 1
+        if (self.box_nos.isChecked()):
+            arr[6]=1
+        return arr
 
 
-# NMEA To DB #
-def load():
-    conn = sqlite3.connect('nmea_to_db.db')
-    c = conn.cursor()
-    tables = list(c.execute("select name from sqlite_master where type is 'table'"))
-    c.executescript(';'.join(["drop table if exists %s" % i for i in tables]))
-        
-    INPUT = 'NMEAFiles'
-    if os.path.isdir(INPUT):
-        l = os.listdir(INPUT)
-        for k in range(len(l)):
-            nmea(INPUT + "\\"+l[k],l[k])
+    def convert(self):
+        self.Working()
+        fileText = self.fileText.toPlainText()
+        outputText = self.folderText.toPlainText()
+        arr = self.checkValues()
+        timeS = self.dateStart.text()[0:8]
+        dateS = self.dateStart.text()[9:19]
+        timeE = self.dateEnd.text()[0:8]
+        dateE = self.dateEnd.text()[9:19]
+        dateS =datetime.date(int(dateS[-4:]), int(dateS[3:5]),int(dateS[0:2]))
+        dateE =datetime.date(int(dateE[-4:]), int(dateE[3:5]),int(dateE[0:2]))
+        timeS= datetime.time(int(timeS[0:2]),int(timeS[3:5]),int(timeS[-2:]))
+        timeE= datetime.time(int(timeE[0:2]),int(timeE[3:5]),int(timeE[-2:]))
+        #filter=[date start, date end,time start, time end, altitude start, altitude end, speed start, speed end, nos start, nos end]
+        filter=[dateS,dateE,timeS,timeE,self.altStart.text(),self.altEnd.text(),self.speedStart.text(),self.speedEnd.text(), self.nosStart.text(),self.nosEnd.text()]
 
-def getRMCdata(row):
-    warning = row[2]
-    if warning == 'V':
-        return
-    time = row[1]
-    latitude = row[3]
-    lat_direction = row[4]
-    longitude = row[5]
-    lon_direction = row[6]
-    speed = row[7]
-    date =  row[9]
-    listRMC = [speed,date,time,latitude,lat_direction,longitude,lon_direction]
-    return listRMC
+        if (fileText==''):
+            self.folderText.setText("Pleasse select a vaild path")
+            print("1")
+        elif ".nmea" in fileText :
 
-def nmea(INPUT,TableName):
-    conn = sqlite3.connect('nmea_to_db.db')
-    c = conn.cursor()
-    l = str(TableName)
-    listName = l.split('.')
-    print(listName)
-
-    
-    c.execute('drop table if exists ' + str(listName[0]) )
-    c.execute('''CREATE TABLE '''+ str(listName[0]) + '''
-                         (time text ,latitude text,latitude_direction text,
-                         longitude text,longitude_direction text,fix text,numOfSat, horizontal_dilution text,
-                          altitude text,direct_of_altitude text,altitude_location text ,speed float ,date text)''')
-
-    with open(INPUT, 'r') as input_file:
-        reader = csv.reader(input_file)
-        #flag will tell us if the GPGGA is good if yes continue to the GPRMC
-        flag = 0
-        # create a csv reader object from the input file (nmea files are basically csv)
-        for row in reader:
-            # skip all lines that do not start with $GPGGA
-            if not row:
-                continue
-            elif row[2] is None:  
-                continue
-            elif row[2] == "":  
-                continue
-            elif "GGA" in row[0]  :
-                time = row[1]
-                latitude = row[2]
-                lat_direction = row[3]
-                longitude = row[4]
-                lon_direction = row[5]
-                fix = row[6]
-                numOfSat = row[7]
-                horizontal = row[8]
-                altitude = row[9]
-                direct_altitude = row[10]
-                altitude_location = row[11]
-                flag = 1
-                c.execute("INSERT INTO "+str(listName[0])+" VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",(time,
-                                                                               latitude,
-                                                                                lat_direction,
-                                                                               longitude,
-                                                                                lon_direction,
-                                                                                fix,
-                                                                                 numOfSat ,              
-                                                                               horizontal,
-                                                                                altitude,
-                                                                               direct_altitude,
-                                                                               altitude_location,' ',' ' ))
-
-            elif "RMC" in row[0]:
-                listRMC = getRMCdata(row)
-                if( listRMC!= None):
-                    c.execute("INSERT INTO " + str(listName[0]) + " VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                            (listRMC[2],listRMC[3],listRMC[4],listRMC[5],listRMC[6],' ',' ',' ',' ',' ',' ',listRMC[0],listRMC[1] ))
-                    # Save (commit) the changes
-                conn.commit()
-                flag=0
-            else:
-                continue
-    # We can also close the connection if we are done with it.
-    # Just be sure any changes have been committed or they will be lost.
-    conn.commit()
-    conn.close()
-
-        # To CSV #
-
-def toCSV():
-    conn = sqlite3.connect("nmea_to_db.db") #open db
-    cursor = conn.cursor() #cursor to the db
-    INPUT = 'NMEAFiles'
-    if os.path.isdir(INPUT):
-        l = os.listdir(INPUT)
-        for k in range(len(l)):
-            spl = str(l[k])
-            listName = spl.split('.')
-            cursor.execute('SELECT * FROM '+str(listName[0]) )
-            print ("[ '" + str(listName[0])+"' , CSV FILE ]")
-            with open("CSV\\"+listName[0]+".csv", "wb") as csv_file: #writing to csv
-                csv_writer = csv.writer(csv_file)
-                csv_writer.writerow([i[0] for i in cursor.description]) # write headers
-                csv_writer.writerows(cursor)
-
-        # To KML #
-
-def format_time(value):
-    hour = value[:2]
-    minute = value[2:4]
-    second = value[4:6]
-    timeval = hour + ":" + minute + ":" + second + "Z"
-    return timeval
-def format_date(value):
-    day = value[:2]
-    month = value[2:4]
-    year = value[4:6]
-    dateval = "20"+year+"-"+month+"-"+day+"T"
-    return dateval
-def knots_to_kph(value):
-    if value is None :# if value == None:
-        return ' '
-    elif value == "":  # if row[2].len() == 0:
-        return ' '
-    elif value == " ":  # if row[2].len() == 0:
-        return ' '
-    else :
-        return   str("%.2f" %(float(value)*1.85200)) +" km/h"
-
-    
-def kml():
-    my_category = 0
-    skip=5
-    database = sqlite3.connect('nmea_to_db.db')
-    INPUT = 'NMEAFiles'
-    if os.path.isdir(INPUT):
-        l = os.listdir(INPUT)
-        for k in range(len(l)):
-            spl = str(l[k])
-            listName = spl.split('.')
-            print("[ '"+listName[0] + "' , KML FILE ]")
-            pois = database.execute("SELECT * FROM "+str(listName[0]) )
-            file = "KML\\"+str(listName[0])+".kml"
-            FILE = open(file, 'w')
-            FILE.truncate(0)
-            FILE.write('<?xml version="1.0" encoding="iso-8859-1"?>\n')
-            FILE.write('<kml xmlns="http://earth.google.com/kml/2.0">\n')
-            FILE.write('    <Document>\n')
-            FILE.write('     <Folder>\n')
-            FILE.write('     <name>Point Features</name>\n')
-            FILE.write('     <description>Point Features</description>\n\n')
-            j=0
-            for poi in pois:
-                if j%skip==0:
-                    FILE.write('<Placemark>\n')
-                    FILE.write('    <TimeStamp>\n')
-                    FILE.write('     <when>%s%s</when>\n' % (format_date(poi[12]),format_time(poi[0])))
-                    FILE.write('    </TimeStamp>\n')
-                    lat = float(poi[1][:2]) + (float(poi[1][2:]) / 60)
-                    lon = float(poi[3][:3]) + (float(poi[3][3:]) / 60)
-                    FILE.write('    <description><![CDATA[Lat: %s <br> Lon: %s<br> Speed: %s <br>]]></description>\n' % (lat, lon,knots_to_kph(poi[10])))
-                    FILE.write('    <Point>\n')
-                    FILE.write('        <coordinates>%s,%s,%s</coordinates>\n' % (str(lon), str(lat), poi[8]))
-                    FILE.write('    </Point>\n')
-                    FILE.write('</Placemark>\n')
-                    j=j+1
-                else:
-                    j=j+1
-            FILE.write('        </Folder>\n')
-            FILE.write('    </Document>\n')
-            FILE.write('</kml>\n')
-            FILE.close()
-    database.close()
-    
-
-
-        #MyQuerys#
-
-def myquery(q):
-    con = sqlite3.connect("nmea_to_db.db")
-    con.isolation_level = None
-    cur = con.cursor()
-
-    buffer = ""
-
-    print ("Enter your SQL commands to execute in sqlite3.")
-    print ("Enter a blank line to exit.")
-
-    while True:
-        line = q
-        if line == "":
-            break
-        buffer += line
-        if sqlite3.complete_statement(buffer):
-            try:
-                buffer = buffer.strip()
-                cur.execute(buffer)
-
-                if buffer.lstrip().upper().startswith("SELECT"):
-                    root = Tk()
-                    root.title("Query ''Select'' result")
-                    root.geometry("750x550")
-                    app = Frame(root)
-                    app.grid()
-                    S = Scrollbar(root)
-                    T = Text(app, height=100, width=100)
-                    S.pack(side=RIGHT, fill=Y)
-                    T.pack(side=LEFT, fill=Y)
-                    S.config(command=T.yview)
-                    T.config(yscrollcommand=S.set)
-                    for row in cur.execute(buffer):
-                        T.insert(INSERT,row)
-                        T.insert(INSERT, "\n")
-                    T.pack()    
-                    break
-            except sqlite3.Error as e:
-                print ("An error occurred:", e.args[0])
-                break
-            buffer = ""
-
-    con.close()
-    
-        # Google Erth #
-
-def showGoogleEarth():
-    if os.path.isdir('KML'):
-        l = os.listdir('KML')
-        for k in range(len(l)):
-            l2 = str(l[k])
-            os.startfile('KML\\'+l2)
-            time.sleep(5)
-
-        # Main #
-
-def querytxt():
-    get = query.get()
-    get1 = query1.get()
-    comm = "select "+get+" from "+get1+";"
-    
-    querys.myquery(comm)
-    return
-
-root = Tk()
-root.title("NMEA TO CSV PROGRAM")
-root.geometry("310x250")
-app = Frame(root)
-app.grid()
-query = StringVar()
-query1 = StringVar()
-
-NmeaRunButton = Button(app , text = "nmea 2 DB" , command = load)
-NmeaRunButton.pack()
-
-ConvertToCSVbutton = Button(app , text = "2 CSV" , command = toCSV)
-ConvertToCSVbutton.pack()
-
-ConvertToKMLbutton = Button(app ,text = "2 KML"  , command = kml)
-ConvertToKMLbutton.pack()
-
-GoogleEbutton = Button(app , text = "See Google Maps"  , command =  showGoogleEarth)
-GoogleEbutton.pack()
-
-L1 = Label(app, text="Enter Query for Example :data/time..")
-L1.pack()
-
-Question = Entry(app,width = 50, textvariable = query)
-Question.pack()
-
-L2 = Label(app, text="Enter NMEA File names ")
-L2.pack()
-
-Question1 = Entry(app,width = 30, textvariable = query1)
-Question1.pack()
-
-EnterQuery = Button(app , text = "Enter", command = querytxt)
-EnterQuery.pack()
-
-mainloop()
+            m.read_file(fileText,0)
+            if self.box_csv.isChecked():
+                    c.create_csv(0, outputText,arr,filter)
+            if self.box_kml.isChecked():
+                    kml.create_kml(0, outputText,arr,filter)
+            print("2")
+        else:
+            i=  m.read_dir(fileText)
+            if self.box_csv.isChecked():
+                for x in range(1, i + 1):
+                     c.create_csv(x,outputText,arr,filter)
+            if self.box_kml.isChecked():
+                for x in range(1, i + 1):
+                    kml.create_kml(x,outputText,arr,filter)
+            print("3")
+        self.finish()
+    def Working(self):
+        self.pushButton_3.setEnabled(False)
+        self.pushButton_3.setText("Working")
+        QtGui.QApplication.processEvents()
+    def finish(self):
+        self.pushButton_3.setEnabled(True)
+        self.pushButton_3.setText("Convert")
+        QtGui.QApplication.processEvents()
+if __name__ == '__main__':
+    app = QtGui.QApplication(sys.argv)
+    ex = Ui_NMEA()
+    ex.show()
+    sys.exit(app.exec_())
