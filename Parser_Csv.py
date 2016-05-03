@@ -3,7 +3,7 @@ import sqlite3
 
 def create_csv(i):
     conn = sqlite3.connect('example.db')
-    conn.text_factory = str ## my current (failed) attempt to resolve this
+    conn.text_factory = str 
     cur = conn.cursor()
     data = cur.execute("SELECT * FROM nmea"+str(i))
     with open('file'+str(i)+'.csv', 'w') as f:

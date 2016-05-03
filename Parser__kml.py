@@ -1,6 +1,3 @@
-# !/usr/bin/python
-# -*- coding: UTF-8 -*-
-
 import os.path
 import sqlite3
 import time
@@ -58,6 +55,3 @@ def create_kml(i):
     FILE.write('</kml>\n')
     FILE.close()
     database.close()
-
-
-#    db_call = "INSERT INTO poi (idmd5, lat, lon, visibility, cat, subcat, keywords, desc, price_range, extended_open) VALUES (?,?,?,?,?,?,?,?,?,?) "
