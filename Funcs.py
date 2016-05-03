@@ -2,20 +2,23 @@ import os.path
 import sqlite3
 
 
-total=0
-def read_dir(str):
-    i=0
-    global total
+sum=0
+def read_directory(str):
+    j=0
+    global sum
     if os.path.isdir(str):
        for file in os.listdir(str):
            if ".nmea" in file:
-               i=i+1
-               read_file(str+"\\"+file,i)
-               total = i
-    return i
+               j=j+1
+               read_file(str+"\\"+file,j)
+               sum = j
+    return j
+
+
+
 
 def read_file(str1,i):
-    with open (str1,'r')as f:
+    with open (str1,'r')as op:
         conn = sqlite3.connect('example.db')
         c = conn.cursor()
         c.execute('drop table if exists nmea' + str(i))
@@ -24,20 +27,20 @@ def read_file(str1,i):
                 (time text, latitude text,north text, longtitude text,
                 east text,quality text, nos text, hdop text, altitude text,
                 hog text,speed text,date text)''')
-        list=f.readlines()
-        index=0
+        list=op.readlines()
+        ind=0
 
-        while index<len(list)-1:             # Go over all the lines in the current file
-            index1 = find_GA(list,index)     # Finding the next GPGGA line
-            if (index1==-1):                 # Checking if the GPGGA line is correct
+        while ind<len(list)-1:             # Go over all the lines in the current file
+            ind1 = find_GA(list,ind)     # Finding the next GPGGA line
+            if (ind1==-1):                 # Checking if the GPGGA line is correct
                 break
-            line1 = checkLine(list[index1])  # Fix line
-            index = index1+1
-            index2 = findMC(list,index)      # Finding the next GPRMC line
-            if (index2 == -1):               # Checking if the GPRMC line is correct
+            line1 = checkLine(list[ind1])  # Fix line
+            ind = ind1+1
+            ind2 = findMC(list,ind)      # Finding the next GPRMC line
+            if (ind2 == -1):               # Checking if the GPRMC line is correct
                 break
-            line2 = checkLine(list[index2])  # Fix line
-            index=index2+1
+            line2 = checkLine(list[ind2])  # Fix line
+            ind=ind2+1
             load_DB(line1,line2,i)           # Enter the lines into the database
        # startTime=c.execute('SELECT MIN(time) FROM summary')
        # print(startTime,"\n")
@@ -45,33 +48,49 @@ def read_file(str1,i):
     return 1
 
 
+
+
+
 def checkLine(line):                         # fix the line to start with '$'
     if (line[0] != '$'):
-        j = 0
-        while line[j] != '$':
-            j = j + 1
-        line1 = line[j:]
-        return line1
+        k = 0
+        while line[k] != '$':
+            k = k + 1
+        fix_line = line[k:]
+        return fix_line
     return line
-def find_GA(list,index):
-    while "GPGGA" not in list[index] and index<len(list)-2:
-        index=index+1
-    if index >= len(list) - 1:
-        return -1
-    str=list[index].split(",")
-    if (str[1]==''):
-        return find_GA(list,index+1)
 
-    return index
-def findMC(list,index):
-    while "GPRMC" not in list[index] and index<len(list)-2:
-        index=index+1
-    if index>=len(list)-1:
+
+
+
+def find_GA(list,ind):
+    while "GPGGA" not in list[ind] and ind<len(list)-2:
+        ind=ind+1
+    if ind >= len(list) - 1:
         return -1
-    str=list[index].split(",")
+    str=list[ind].split(",")
     if (str[1]==''):
-        return find_GA(list,index+1)
-    return index
+        return find_GA(list,ind+1)
+
+    return ind
+
+
+
+
+def findMC(list,ind):
+    while "GPRMC" not in list[ind] and ind<len(list)-2:
+        ind=ind+1
+    if ind>=len(list)-1:
+        return -1
+    str=list[ind].split(",")
+    if (str[1]==''):
+        return find_GA(list,ind+1)
+    return ind
+
+
+
+
+
 def load_DB(str1,str2,i):
     list1=str1.split(",")
     list2=str2.split(",")
@@ -83,9 +102,13 @@ def load_DB(str1,str2,i):
     conn.close()
 
 
+
+
 def dropAll():
     conn = sqlite3.connect('example.db')
     c = conn.cursor()
     tables = list(c.execute("select name from sqlite_master where type is 'table'"))
-
     c.executescript(';'.join(["drop table if exists %s" % i for i in tables]))
+    
+    
+    

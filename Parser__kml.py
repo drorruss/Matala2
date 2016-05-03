@@ -6,19 +6,29 @@ def format_time(value):
     hour = value[:2]
     minute = value[2:4]
     second = value[4:6]
-    timeval = hour + ":" + minute + ":" + second + "Z"
-    return timeval
+    time = hour + ":" + minute + ":" + second + "Z"
+    return time
+
+
+
 def format_date(value):
     day = value[:2]
     month = value[2:4]
     year = value[4:6]
-    dateval = "20"+year+"-"+month+"-"+day+"T"
-    return dateval
-def knots_to_kph(value):
-    return   str("%.2f" %(float(value)*1.85200)) +" km/h"
+    date = "20"+year+"-"+month+"-"+day+"T"
+    return date
 
-def create_kml(i):
-    my_category = 0
+
+
+
+def knots_to_kph(value):
+    return  str("%.2f" %(float(value)*1.85200)) +" km/h"
+
+
+
+
+
+def create_kml(i):  #by sqlite
     skip=5
     database = sqlite3.connect('example.db')
     pois = database.execute("SELECT * FROM nmea" + str(i))
@@ -55,3 +65,6 @@ def create_kml(i):
     FILE.write('</kml>\n')
     FILE.close()
     database.close()
+    
+    
+    
