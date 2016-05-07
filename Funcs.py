@@ -3,7 +3,7 @@ import sqlite3
 
 
 sum=0
-def read_directory(str):
+def read_directory(str):   #read all nmea files for, directory
     j=0
     global sum
     if os.path.isdir(str):
@@ -42,8 +42,7 @@ def read_file(str1,i):
             line2 = checkLine(list[ind2])  # Fix line
             ind=ind2+1
             load_DB(line1,line2,i)           # Enter the lines into the database
-       # startTime=c.execute('SELECT MIN(time) FROM summary')
-       # print(startTime,"\n")
+
         conn.close()
     return 1
 
@@ -100,15 +99,6 @@ def load_DB(str1,str2,i):
     c.execute("INSERT INTO nmea"+str(i)+" VALUES (?,?,?,?,?,?,?,?,?,?,?,?)",(list1[1], list1[2], list1[3], list1[4],list1[5], list1[6],list1[7], list1[8], list1[9], list1[10],list2[7],list2[9]))
     conn.commit()
     conn.close()
-
-
-
-
-def dropAll():
-    conn = sqlite3.connect('example.db')
-    c = conn.cursor()
-    tables = list(c.execute("select name from sqlite_master where type is 'table'"))
-    c.executescript(';'.join(["drop table if exists %s" % i for i in tables]))
     
     
     
